@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToBasket, fetchProducts, setView } from '../features/productSlice';
+import { addToBasket, fetchProducts, openBasketModal, setView } from '../features/productSlice';
 import Favorite from './Favorite';
 import { Loader } from './Loader';
 import ViewFilter from './ViewFilter';
@@ -9,7 +9,7 @@ import { Basket } from './Basket';
 
 const ProductList = () => {
     const dispatch = useDispatch();
-    const { loading, error, filteredProducts, view, basketList } = useSelector((state) => state.products);
+    const { loading, error, filteredProducts, view } = useSelector((state) => state.products);
 
     const handleAddBasket = (item) => {
         const newItem = {
@@ -19,8 +19,9 @@ const ProductList = () => {
             count: 1,
             id: item.id
         };
-
+        
         dispatch(addToBasket(newItem));
+        dispatch(openBasketModal(true))
     };
 
     useEffect(() => {
@@ -28,20 +29,13 @@ const ProductList = () => {
         dispatch(setView(4));
     }, [dispatch]);
 
-    // console.log("jsdhkjsf", basketList)
-
 
     if (error) return <div>Error: {error}</div>;
 
     return (
         <div>
             <ViewFilter />
-            {
-                basketList.length > 0 && (
-                    <Basket />
-
-                )
-            }
+            <Basket />
             <div className="dark:bg-gray-900 bg-white pt-5">
                 {
                     loading ? <Loader /> :

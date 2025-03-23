@@ -12,10 +12,10 @@ import {
     PopoverPanel,
 } from '@headlessui/react'
 import { Close, DarkMode, LightMode } from '@mui/icons-material';
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, Search, ShoppingBasketIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchFilter, setFilter, setView, sortByPrice } from '../features/productSlice';
+import { openBasketModal, searchFilter, setFilter, setView, sortByPrice } from '../features/productSlice';
 
 const sortOptions = [
     { name: 'Fiyata göre artan', value: 'asc' },
@@ -27,10 +27,14 @@ const ViewFilter = () => {
     const [selectedCategory, setSelectedCategory] = useState([]);
     const { products } = useSelector((state) => state.products);
     const uniqueCategories = [...new Set(products.map(product => product.category))];
-    const [theme, setTheme] = useState(() => { "light" });
-    let handleTheme = () => {
-        setTheme(theme === "dark" ? "light" : "dark")
-    }
+    const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+
+    const handleTheme = () => {
+        const newTheme = theme === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
+        document.documentElement.classList.toggle("dark", newTheme === "dark");
+    };
 
     useEffect(() => {
         if (theme === "dark") {
@@ -39,7 +43,6 @@ const ViewFilter = () => {
         else {
             document.documentElement.classList.remove('dark')
         }
-        localStorage.setItem("theme", theme ? "dark" : "light");
     }, [theme]);
 
     const dispatch = useDispatch();
@@ -60,6 +63,9 @@ const ViewFilter = () => {
         dispatch(searchFilter(val));
     }
 
+    const handleBasketClick = () => {
+        dispatch(openBasketModal(true))
+    }
 
     return (
         <div className="bg-gray-50 dark:bg-gray-900 relative z-20">
@@ -124,7 +130,7 @@ const ViewFilter = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='flex items-center gap-8 flex-1 justify-end'>
+                        <div className='flex items-center gap-6 flex-1 justify-end'>
                             <PopoverGroup className="hidden sm:flex sm:items-baseline sm:space-x-8">
                                 <Popover
                                     id={`desktop-menu-1`}
@@ -214,6 +220,7 @@ const ViewFilter = () => {
                                     </div>
                                 </MenuItems>
                             </Menu>
+                            <button onClick={handleBasketClick} className='text-gray-900 dark:text-white'><ShoppingBasketIcon className='text-gray-900 dark:text-white' size={24} /></button>
                         </div>
                         <button
                             className={`cursor-pointer fixed left-4 bottom-12 text-center p-4 flex rounded-full dark:bg-gray-700 dark:text-white bg-yellow-500 text-white`}

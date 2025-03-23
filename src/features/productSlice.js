@@ -18,7 +18,8 @@ const productSlice = createSlice({
         searchFilter: null,
         setView: null,
         view: 4,
-        basketList: []
+        basketList: [],
+        open: false
     },
     reducers: {
         setFilter: (state, action) => {
@@ -78,8 +79,9 @@ const productSlice = createSlice({
                 }
             }
         },
-
-
+        openBasketModal: (state, action) => {
+            state.open = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -98,6 +100,6 @@ const productSlice = createSlice({
     },
 });
 
-export const { setFilter, sortByPrice, searchFilter, setView, addToBasket, removeToBasket } = productSlice.actions;
+export const { setFilter, sortByPrice, searchFilter, setView, addToBasket, removeToBasket, openBasketModal } = productSlice.actions;
 
 export default productSlice.reducer;
