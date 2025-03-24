@@ -1,6 +1,5 @@
 'use client'
 
-import { Trash2Icon } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +8,8 @@ import { DarkMode, LightMode } from '@mui/icons-material';
 import { handleTheme } from '../features/productSlice';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const schema = yup.object().shape({
   firstName: yup.string().required("İsim alanı zorunlu"),
@@ -30,7 +31,7 @@ export const Bill = () => {
   const { basketList, open } = useSelector((state) => state.products);
   const dispatch = useDispatch();
   const theme = useSelector(state => state.products.theme);
-
+  const navigate = useNavigate();
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
@@ -63,7 +64,7 @@ export const Bill = () => {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 sm:h-screen">
       <div className="mx-auto max-w-2xl px-4 pb-24 pt-4 sm:pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-
+        <button className='flex mb-3 gap-2 dark:text-white font-semibold' onClick={() => { navigate('/') }}><ArrowLeft />Geri</button>
         <form onSubmit={handleSubmit(formSubmit)} className="lg:grid flex flex-col-reverse lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
           <div>
             <h2 className="text-lg font-medium dark:text-white text-gray-900 sm:mt-0 mt-6">Sipariş Bilgileri</h2>
@@ -165,18 +166,10 @@ export const Bill = () => {
                           </h4>
                         </div>
 
-                        <div className="ml-4 flow-root shrink-0">
-                          <button
-                            type="button"
-                            className="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500"
-                          >
-                            <Trash2Icon aria-hidden="true" className="size-5" />
-                          </button>
-                        </div>
                       </div>
 
                       <div className="flex flex-1 items-end justify-between pt-2">
-                        <p className="mt-1 text-sm font-medium text-gray-900">{product.price} TL</p>
+                        <p className="mt-1 text-sm font-medium text-gray-900">{product.price} TL ({product.count})</p>
                       </div>
                     </div>
                   </li>
