@@ -28,7 +28,7 @@ const schema = yup.object().shape({
 });
 
 export const Bill = () => {
-  const { basketList, open } = useSelector((state) => state.products);
+  const { basketList } = useSelector((state) => state.products);
   const dispatch = useDispatch();
   const theme = useSelector(state => state.products.theme);
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ export const Bill = () => {
 
   const formSubmit = (form) => {
     approveToast();
-    console.log("Data:", form);
+    console.log("Form:", form);
   };
 
 

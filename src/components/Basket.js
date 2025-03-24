@@ -6,20 +6,23 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export const Basket = () => {
-    const { basketList, open } = useSelector((state) => state.products);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { basketList, open } = useSelector((state) => state.products);
+
     const approveToast = () => {
         toast.success("Ürün başarıyla silindi.", {
             position: "top-right",
             autoClose: 3000,
         });
     };
+    
     const handleRemoveFromBasket = (productId) => {
         dispatch(removeToBasket({ id: productId }));
         approveToast();
     };
 
-    const navigate = useNavigate();
     return (
         open && (
             <div className='h-screen w-52 shadow-md dark:bg-gray-900 bg-white fixed right-0 top-0 z-20 p-3 overflow-auto'>

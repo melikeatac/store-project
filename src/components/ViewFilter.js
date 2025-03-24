@@ -1,7 +1,4 @@
 import {
-    Dialog,
-    DialogBackdrop,
-    DialogPanel,
     Menu,
     MenuButton,
     MenuItem,
@@ -11,7 +8,7 @@ import {
     PopoverGroup,
     PopoverPanel,
 } from '@headlessui/react'
-import { Close, DarkMode, LightMode } from '@mui/icons-material';
+import { DarkMode, LightMode } from '@mui/icons-material';
 import { ChevronDown, Search, ShoppingBasketIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,7 +20,7 @@ const sortOptions = [
 ]
 
 const ViewFilter = () => {
-    const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
     const [selectedCategory, setSelectedCategory] = useState([]);
     const { products, basketList } = useSelector((state) => state.products);
     const uniqueCategories = [...new Set(products.map(product => product.category))];
@@ -39,7 +36,6 @@ const ViewFilter = () => {
         document.documentElement.classList.toggle('dark', theme === 'dark');
     }, [theme]);
 
-    const dispatch = useDispatch();
 
     const handleCategoryFilter = (category) => {
         setSelectedCategory((prev) => {
@@ -50,9 +46,11 @@ const ViewFilter = () => {
             return newSelection;
         });
     };
+
     const handleClick = (item) => {
         dispatch(sortByPrice(item));
     }
+    
     const handleChange = (val) => {
         dispatch(searchFilter(val));
     }

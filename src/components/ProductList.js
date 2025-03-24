@@ -9,7 +9,8 @@ import { Basket } from './Basket';
 
 const ProductList = () => {
     const dispatch = useDispatch();
-    const { loading, error, filteredProducts, view } = useSelector((state) => state.products);
+
+    const { loading, filteredProducts, view } = useSelector((state) => state.products);
 
     const handleAddBasket = (item) => {
         const newItem = {
@@ -19,7 +20,6 @@ const ProductList = () => {
             count: 1,
             id: item.id
         };
-
         dispatch(addToBasket(newItem));
         dispatch(openBasketModal(true))
     };
@@ -29,7 +29,7 @@ const ProductList = () => {
         dispatch(setView(4));
     }, [dispatch]);
 
-  
+
     return (
         <div>
             <ViewFilter />
