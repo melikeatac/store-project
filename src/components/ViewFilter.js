@@ -28,7 +28,13 @@ const ViewFilter = () => {
     const { products, basketList } = useSelector((state) => state.products);
     const uniqueCategories = [...new Set(products.map(product => product.category))];
     const theme = useSelector(state => state.products.theme);
+    let basketCount = 0;
 
+    basketList.forEach(product => {
+        basketCount += product.count;
+    });
+
+    console.log(basketCount);
     useEffect(() => {
         document.documentElement.classList.toggle('dark', theme === 'dark');
     }, [theme]);
@@ -174,7 +180,7 @@ const ViewFilter = () => {
                                     </div>
                                 </MenuItems>
                             </Menu>
-                            <button onClick={handleBasketClick} className='text-gray-900 dark:text-white flex items-center gap-1'><ShoppingBasketIcon className='text-gray-900 dark:text-white' size={24} />({basketList.length})</button>
+                            <button onClick={handleBasketClick} className='text-gray-900 dark:text-white flex items-center gap-1'><ShoppingBasketIcon className='text-gray-900 dark:text-white' size={24} />({basketCount})</button>
                         </div>
                         <button
                             className={`cursor-pointer fixed left-4 bottom-12 text-center p-4 flex rounded-full bg-gray-700 text-white dark:bg-yellow-500`}
