@@ -20,6 +20,7 @@ Bu proje, React ve Tailwind CSS kullanılarak geliştirilmiş basit bir e-ticare
 - **Form Validasyonu**:
   - **React Hook Form** ile form yönetimi sağlandı.
   - **Yup** ile form doğrulama kuralları oluşturuldu.
+- **Bildirimler**: Bildirimler için react-toastify kütüphanesi kullanıldı
 
 ## Kurulum
 Projeyi yerel ortamda çalıştırmak için aşağıdaki adımları takip edin:
