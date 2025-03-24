@@ -19,7 +19,7 @@ const ProductList = () => {
             count: 1,
             id: item.id
         };
-        
+
         dispatch(addToBasket(newItem));
         dispatch(openBasketModal(true))
     };
@@ -29,9 +29,7 @@ const ProductList = () => {
         dispatch(setView(4));
     }, [dispatch]);
 
-
-    if (error) return <div>Error: {error}</div>;
-
+  
     return (
         <div>
             <ViewFilter />
@@ -50,7 +48,7 @@ const ProductList = () => {
                                             <img
                                                 alt={product.title}
                                                 src={product.image}
-                                                className="aspect-square m-auto max-h-80 rounded-lg bg-white object-contain"
+                                                className="aspect-square m-auto max-h-52 sm:max-h-80 rounded-lg bg-white object-contain"
                                             />
                                             <div className="pt-10">
                                                 <h3 className="text-sm font-medium dark:text-white text-gray-900 line-clamp-2 h-11">

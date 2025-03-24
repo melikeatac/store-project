@@ -19,7 +19,8 @@ const productSlice = createSlice({
         setView: null,
         view: 4,
         basketList: [],
-        open: false
+        open: false,
+        theme: localStorage.getItem("theme") || "light"
     },
     reducers: {
         setFilter: (state, action) => {
@@ -81,6 +82,12 @@ const productSlice = createSlice({
         },
         openBasketModal: (state, action) => {
             state.open = action.payload;
+        },
+        handleTheme: (state) => {
+            const newTheme = state.theme === "dark" ? "light" : "dark";
+            state.theme = newTheme;
+            localStorage.setItem("theme", newTheme);
+            document.documentElement.classList.toggle("dark", newTheme === "dark");
         }
     },
     extraReducers: (builder) => {
@@ -100,6 +107,6 @@ const productSlice = createSlice({
     },
 });
 
-export const { setFilter, sortByPrice, searchFilter, setView, addToBasket, removeToBasket, openBasketModal } = productSlice.actions;
+export const { setFilter, sortByPrice, searchFilter, setView, addToBasket, removeToBasket, openBasketModal, handleTheme } = productSlice.actions;
 
 export default productSlice.reducer;

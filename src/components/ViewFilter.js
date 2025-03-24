@@ -15,7 +15,7 @@ import { Close, DarkMode, LightMode } from '@mui/icons-material';
 import { ChevronDown, Search, ShoppingBasketIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { openBasketModal, searchFilter, setFilter, setView, sortByPrice } from '../features/productSlice';
+import { handleTheme, openBasketModal, searchFilter, setFilter, setView, sortByPrice } from '../features/productSlice';
 
 const sortOptions = [
     { name: 'Fiyata göre artan', value: 'asc' },
@@ -25,24 +25,12 @@ const sortOptions = [
 const ViewFilter = () => {
     const [open, setOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState([]);
-    const { products } = useSelector((state) => state.products);
+    const { products, basketList } = useSelector((state) => state.products);
     const uniqueCategories = [...new Set(products.map(product => product.category))];
-    const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
-
-    const handleTheme = () => {
-        const newTheme = theme === "dark" ? "light" : "dark";
-        setTheme(newTheme);
-        localStorage.setItem("theme", newTheme);
-        document.documentElement.classList.toggle("dark", newTheme === "dark");
-    };
+    const theme = useSelector(state => state.products.theme);
 
     useEffect(() => {
-        if (theme === "dark") {
-            document.documentElement.classList.add('dark')
-        }
-        else {
-            document.documentElement.classList.remove('dark')
-        }
+        document.documentElement.classList.toggle('dark', theme === 'dark');
     }, [theme]);
 
     const dispatch = useDispatch();
@@ -69,49 +57,15 @@ const ViewFilter = () => {
 
     return (
         <div className="bg-gray-50 dark:bg-gray-900 relative z-20">
-            {/* Mobile filter dialog */}
-            <Dialog open={open} onClose={setOpen} className="relative z-40 sm:hidden">
-                <DialogBackdrop
-                    transition
-                    className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
-                />
-
-                <div className="fixed inset-0 z-40 flex">
-                    <DialogPanel
-                        transition
-                        className="relative ml-auto flex size-full max-w-xs transform flex-col overflow-y-auto bg-white py-4 pb-6 shadow-xl transition duration-300 ease-in-out data-[closed]:translate-x-full"
-                    >
-                        <div className="flex items-center justify-between px-4">
-                            <h2 className="text-lg font-medium dark:text-white text-gray-900">Filters</h2>
-                            <button
-                                type="button"
-                                onClick={() => setOpen(false)}
-                                className="-mr-2 flex size-10 items-center justify-center rounded-md dark:bg-gray-900 dark:text-white bg-white p-2 text-gray-400 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            >
-                                <span className="sr-only">Close menu</span>
-                                <Close aria-hidden="true" className="size-6" />
-                            </button>
-                        </div>
-                    </DialogPanel>
-                </div>
-            </Dialog>
-
             <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8 dark:bg-gray-900">
                 <section aria-labelledby="filter-heading" className="border-t dark:border-gray-600 border-gray-200 py-6">
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-stretch w-full gap-3 sm:gap-0 sm:items-center sm:flex-row flex-col-reverse justify-between">
 
-                        <div className='flex items-center gap-3 flex-1 dark:text-white'>
+                        <div className='hidden sm:flex items-center gap-3 flex-1 dark:text-white'>
                             <p>Görünüm:</p>
                             <button onClick={() => dispatch(setView(3))}>3</button> | <button onClick={() => dispatch(setView(4))}>4</button> | <button onClick={() => dispatch(setView(5))}>5</button>
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => setOpen(true)}
-                            className="inline-block text-sm font-medium dark:bg-gray-900 dark:text-white text-gray-700 hover:text-gray-900 sm:hidden"
-                        >
-                            Filters
-                        </button>
                         <div className="mt-2 flex-1">
                             <div className="flex rounded-md dark:text-gray-900 bg-white outline outline-1 -outline-offset-1 dark:outline-gray-900 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-orange-600">
                                 <input
@@ -131,7 +85,7 @@ const ViewFilter = () => {
                             </div>
                         </div>
                         <div className='flex items-center gap-6 flex-1 justify-end'>
-                            <PopoverGroup className="hidden sm:flex sm:items-baseline sm:space-x-8">
+                            <PopoverGroup className="flex sm:items-baseline sm:space-x-8">
                                 <Popover
                                     id={`desktop-menu-1`}
                                     className="relative inline-block text-left"
@@ -220,13 +174,13 @@ const ViewFilter = () => {
                                     </div>
                                 </MenuItems>
                             </Menu>
-                            <button onClick={handleBasketClick} className='text-gray-900 dark:text-white'><ShoppingBasketIcon className='text-gray-900 dark:text-white' size={24} /></button>
+                            <button onClick={handleBasketClick} className='text-gray-900 dark:text-white flex items-center gap-1'><ShoppingBasketIcon className='text-gray-900 dark:text-white' size={24} />({basketList.length})</button>
                         </div>
                         <button
-                            className={`cursor-pointer fixed left-4 bottom-12 text-center p-4 flex rounded-full dark:bg-gray-700 dark:text-white bg-yellow-500 text-white`}
-                            onClick={handleTheme}
+                            className={`cursor-pointer fixed left-4 bottom-12 text-center p-4 flex rounded-full bg-gray-700 text-white dark:bg-yellow-500`}
+                            onClick={() => { dispatch(handleTheme()) }}
                         >
-                            {theme === "dark" ? <DarkMode /> : <LightMode />}
+                            {theme === "dark" ? <LightMode /> : <DarkMode />}
                         </button>
                     </div>
                 </section>
